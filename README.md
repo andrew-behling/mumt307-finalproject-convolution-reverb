@@ -190,3 +190,20 @@ end
 outWet(1, iStart+1:iStart+blockSize) = outWet(1, iStart+1:iStart+blockSize) + interp1(iStart+1:iStart+blockSize+zeroPad, real(ifft(YOut(1,:))), iStart+1:iStart+blockSize);
 outWet(2, iStart+1:iStart+blockSize) = outWet(2, iStart+1:iStart+blockSize) + interp1(iStart+1:iStart+blockSize+zeroPad, real(ifft(YOut(2,:))), iStart+1:iStart+blockSize);
 ```
+The resulting output signal is finally mixed with a dry signal according to a user specified mix value.
+```
+mix = .3;
+mixWet = mix;
+mixDry = 1 - mixWet;
+
+NOut = size(outWet,2);
+out = zeros(2,NOut);
+
+for i = 1:NOut
+
+    out(:,i) = mixDry * in(:,i) + mixWet * outWet(:,i);
+
+end
+
+soundsc(out, fs); 
+```
